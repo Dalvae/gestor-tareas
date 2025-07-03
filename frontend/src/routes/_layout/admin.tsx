@@ -104,7 +104,7 @@ function UsersTable() {
         >
           <Flex>
             <PaginationPrevTrigger />
-            <PaginationItems />
+            
             <PaginationNextTrigger />
           </Flex>
         </PaginationRoot>
