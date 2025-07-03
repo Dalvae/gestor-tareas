@@ -97,10 +97,10 @@ Dialog components like `EditTask` and `DeleteTask` should manage their own `isOp
 The `/tasks` route now supports two views: a list view and a calendar view. Users can switch between these views using buttons.
 
 *   **`TasksTable`**: The existing component for displaying tasks in a table format.
-*   **`TaskCalendar`**: A new component (currently a placeholder) for displaying tasks in a calendar format.
+*   **`TaskCalendar`**: A component for displaying tasks in a calendar format, implemented using `react-big-calendar`.
 
 **Implementation Details:**
 
 *   The `Tasks` component in `frontend/src/routes/_layout/tasks.tsx` manages the `view` state.
 *   Buttons with `FaList` and `FaCalendarAlt` icons are used to toggle between the `list` and `calendar` views.
-*   The appropriate component (`TasksTable` or `TaskCalendar`) is rendered based on the `view` state.
+*   The `TaskCalendar` component now fetches tasks using `useQuery`, formats them for `react-big-calendar`, and displays them in the "agenda" view by default. It also handles the case where no tasks are available.
