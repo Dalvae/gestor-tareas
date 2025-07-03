@@ -26,7 +26,7 @@ const UserMenu = () => {
               truncate
             >
               <FaUserAstronaut fontSize="18" />
-              <Text>{user?.full_name || "User"}</Text>
+              <Text>{user?.full_name || "Usuario"}</Text>
             </Button>
           </MenuTrigger>
 
@@ -40,7 +40,7 @@ const UserMenu = () => {
                 style={{ cursor: "pointer" }}
               >
                 <FiUser fontSize="18px" />
-                <Box flex="1">My Profile</Box>
+                <Box flex="1">Mi Perfil</Box>
               </MenuItem>
             </Link>
 
@@ -52,7 +52,7 @@ const UserMenu = () => {
               style={{ cursor: "pointer" }}
             >
               <FiLogOut />
-              Log Out
+              Cerrar sesión
             </MenuItem>
           </MenuContent>
         </MenuRoot>

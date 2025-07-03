@@ -14,7 +14,7 @@ export const TaskActionsMenu = ({ task }: TaskActionsMenuProps) => {
   return (
     <MenuRoot>
       <MenuTrigger asChild>
-        <IconButton variant="ghost" color="inherit" aria-label="More options">
+        <IconButton variant="ghost" color="inherit" aria-label="Más opciones">
           <BsThreeDotsVertical />
         </IconButton>
       </MenuTrigger>

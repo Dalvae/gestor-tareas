@@ -40,7 +40,7 @@ const Sidebar = () => {
             variant="ghost"
             color="inherit"
             display={{ base: "flex", md: "none" }}
-            aria-label="Open Menu"
+            aria-label="Abrir menú"
             position="absolute"
             zIndex="100"
             m={4}
@@ -63,12 +63,12 @@ const Sidebar = () => {
                   py={2}
                 >
                   <FiLogOut />
-                  <Text>Log Out</Text>
+                  <Text>Cerrar sesión</Text>
                 </Flex>
               </Box>
               {currentUser?.email && (
                 <Text fontSize="sm" p={2}>
-                  Logged in as: {currentUser.email}
+                  Sesión iniciada como: {currentUser.email}
                 </Text>
               )}
             </Flex>

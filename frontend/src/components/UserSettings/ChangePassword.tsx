@@ -29,7 +29,7 @@ const ChangePassword = () => {
     mutationFn: (data: UpdatePassword) =>
       UsersService.updatePasswordMe({ requestBody: data }),
     onSuccess: () => {
-      showSuccessToast("Password updated successfully.")
+      showSuccessToast("Contraseña actualizada exitosamente.")
       reset()
     },
     onError: (err: ApiError) => {
@@ -45,7 +45,7 @@ const ChangePassword = () => {
     <>
       <Container maxW="full">
         <Heading size="sm" py={4}>
-          Change Password
+          Cambiar Contraseña
         </Heading>
         <Box
           w={{ sm: "full", md: "300px" }}
@@ -57,21 +57,21 @@ const ChangePassword = () => {
               type="current_password"
               startElement={<FiLock />}
               {...register("current_password", passwordRules())}
-              placeholder="Current Password"
+              placeholder="Contraseña Actual"
               errors={errors}
             />
             <PasswordInput
               type="new_password"
               startElement={<FiLock />}
               {...register("new_password", passwordRules())}
-              placeholder="New Password"
+              placeholder="Nueva Contraseña"
               errors={errors}
             />
             <PasswordInput
               type="confirm_password"
               startElement={<FiLock />}
               {...register("confirm_password", confirmPasswordRules(getValues))}
-              placeholder="Confirm Password"
+              placeholder="Confirmar Contraseña"
               errors={errors}
             />
           </VStack>
@@ -82,7 +82,7 @@ const ChangePassword = () => {
             loading={isSubmitting}
             disabled={!isValid}
           >
-            Save
+            Guardar
           </Button>
         </Box>
       </Container>

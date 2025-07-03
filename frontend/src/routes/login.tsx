@@ -13,7 +13,7 @@ import { Field } from "@/components/ui/field"
 import { InputGroup } from "@/components/ui/input-group"
 import { PasswordInput } from "@/components/ui/password-input"
 import useAuth, { isLoggedIn } from "@/hooks/useAuth"
-import Logo from "/assets/images/fastapi-logo.svg"
+import Logo from "/assets/images/task-manager-logo.svg"
 import { emailPattern, passwordRules } from "../utils"
 
 export const Route = createFileRoute("/login")({
@@ -68,7 +68,7 @@ function Login() {
       >
         <Image
           src={Logo}
-          alt="FastAPI logo"
+          alt="Gestor de Tareas logo"
           height="auto"
           maxW="2xs"
           alignSelf="center"
@@ -82,10 +82,10 @@ function Login() {
             <Input
               id="username"
               {...register("username", {
-                required: "Username is required",
+                required: "El correo electrónico es requerido",
                 pattern: emailPattern,
               })}
-              placeholder="Email"
+              placeholder="Correo electrónico"
               type="email"
             />
           </InputGroup>
@@ -94,19 +94,19 @@ function Login() {
           type="password"
           startElement={<FiLock />}
           {...register("password", passwordRules())}
-          placeholder="Password"
+          placeholder="Contraseña"
           errors={errors}
         />
         <RouterLink to="/recover-password" className="main-link">
-          Forgot Password?
+          ¿Olvidaste tu contraseña?
         </RouterLink>
         <Button variant="solid" type="submit" loading={isSubmitting} size="md">
-          Log In
+          Iniciar sesión
         </Button>
         <Text>
-          Don't have an account?{" "}
+          ¿No tienes una cuenta?{" "}
           <RouterLink to="/signup" className="main-link">
-            Sign Up
+            Registrarse
           </RouterLink>
         </Text>
       </Container>

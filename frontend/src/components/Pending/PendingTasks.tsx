@@ -4,7 +4,7 @@ const PendingTasks = () => (
   <Flex direction="column" align="center" justify="center" h="50vh">
     <Spinner size="xl" color="blue.500" />
     <Text fontSize="xl" fontWeight="bold" mt={4}>
-      Loading tasks...
+      Cargando tareas...
     </Text>
   </Flex>
 )

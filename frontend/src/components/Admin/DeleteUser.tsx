@@ -33,11 +33,11 @@ const DeleteUser = ({ id }: { id: string }) => {
   const mutation = useMutation({
     mutationFn: deleteUser,
     onSuccess: () => {
-      showSuccessToast("The user was deleted successfully")
+      showSuccessToast("El usuario fue eliminado exitosamente")
       setIsOpen(false)
     },
     onError: () => {
-      showErrorToast("An error occurred while deleting the user")
+      showErrorToast("Ocurrió un error al eliminar el usuario")
     },
     onSettled: () => {
       queryClient.invalidateQueries()
@@ -59,18 +59,18 @@ const DeleteUser = ({ id }: { id: string }) => {
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm" colorPalette="red">
           <FiTrash2 fontSize="16px" />
-          Delete User
+          Eliminar Usuario
         </Button>
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Delete User</DialogTitle>
+            <DialogTitle>Eliminar Usuario</DialogTitle>
           </DialogHeader>
           <DialogBody>
             <Text mb={4}>
-              This user will be permanently deleted. Are you sure? You will not
-              be able to undo this action.
+              Este usuario se eliminará permanentemente. ¿Estás seguro? No podrás
+              deshacer esta acción.
             </Text>
           </DialogBody>
 
@@ -81,7 +81,7 @@ const DeleteUser = ({ id }: { id: string }) => {
                 colorPalette="gray"
                 disabled={isSubmitting}
               >
-                Cancel
+                Cancelar
               </Button>
             </DialogActionTrigger>
             <Button
@@ -90,7 +90,7 @@ const DeleteUser = ({ id }: { id: string }) => {
               type="submit"
               loading={isSubmitting}
             >
-              Delete
+              Eliminar
             </Button>
           </DialogFooter>
           <DialogCloseTrigger />

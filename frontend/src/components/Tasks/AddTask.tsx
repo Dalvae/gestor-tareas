@@ -24,7 +24,7 @@ const AddTask = () => {
   const mutation = useMutation({
     mutationFn: (data: TaskCreate) => TasksService.createTask({ requestBody: data }),
     onSuccess: () => {
-      showSuccessToast("Task created successfully.")
+      showSuccessToast("Tarea creada exitosamente.")
       reset()
     },
     onError: (err: any) => {
@@ -43,40 +43,40 @@ const AddTask = () => {
     <DialogRoot>
       <DialogTrigger asChild>
         <Button value="add-task" my={4}>
-          Add Task
+          Añadir Tarea
         </Button>
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Add Task</DialogTitle>
+            <DialogTitle>Añadir Tarea</DialogTitle>
           </DialogHeader>
           <DialogBody>
-            <Text mb={4}>Fill in the details to add a new task.</Text>
+            <Text mb={4}>Rellena los detalles para añadir una nueva tarea.</Text>
             <Flex direction={{ base: "column", md: "row" }} gap={4}>
-              <Field required label="Title">
+              <Field required label="Título">
                 <Input
                   type="text"
-                  {...register("title", { required: "Title is required" })}
-                  placeholder="Task title"
+                  {...register("title", { required: "El título es requerido" })}
+                  placeholder="Título de la tarea"
                 />
               </Field>
-              <Field label="Description">
+              <Field label="Descripción">
                 <Textarea
                   {...register("description")}
-                  placeholder="Task description"
+                  placeholder="Descripción de la tarea"
                 />
               </Field>
             </Flex>
             <Flex direction={{ base: "column", md: "row" }} gap={4} mt={4}>
-              <Field label="Due Date">
+              <Field label="Fecha de Vencimiento">
                 <Input type="date" {...register("due_date")} />
               </Field>
-              <Field label="Status">
-                <Input type="text" {...register("status")} placeholder="pending" />
+              <Field label="Estado">
+                <Input type="text" {...register("status")} placeholder="pendiente" />
               </Field>
-              <Field label="Priority">
-                <Input type="text" {...register("priority")} placeholder="medium" />
+              <Field label="Prioridad">
+                <Input type="text" {...register("priority")} placeholder="media" />
               </Field>
             </Flex>
           </DialogBody>
@@ -88,7 +88,7 @@ const AddTask = () => {
                 colorPalette="gray"
                 disabled={formState.isSubmitting}
               >
-                Cancel
+                Cancelar
               </Button>
             </DialogActionTrigger>
             <Button
@@ -97,7 +97,7 @@ const AddTask = () => {
               type="submit"
               loading={formState.isSubmitting}
             >
-              Add
+              Añadir
             </Button>
           </DialogFooter>
           <DialogCloseTrigger />

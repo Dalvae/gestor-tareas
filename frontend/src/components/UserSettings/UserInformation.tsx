@@ -50,7 +50,7 @@ const UserInformation = () => {
     mutationFn: (data: UserUpdateMe) =>
       UsersService.updateUserMe({ requestBody: data }),
     onSuccess: () => {
-      showSuccessToast("User updated successfully.")
+      showSuccessToast("Usuario actualizado exitosamente.")
     },
     onError: (err: ApiError) => {
       handleError(err)
@@ -73,14 +73,14 @@ const UserInformation = () => {
     <>
       <Container maxW="full">
         <Heading size="sm" py={4}>
-          User Information
+          Información de Usuario
         </Heading>
         <Box
           w={{ sm: "full", md: "50%" }}
           as="form"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Field label="Full name">
+          <Field label="Nombre completo">
             {editMode ? (
               <Input
                 {...register("full_name", { maxLength: 30 })}
@@ -102,14 +102,14 @@ const UserInformation = () => {
           </Field>
           <Field
             mt={4}
-            label="Email"
+            label="Correo electrónico"
             invalid={!!errors.email}
             errorText={errors.email?.message}
           >
             {editMode ? (
               <Input
                 {...register("email", {
-                  required: "Email is required",
+                  required: "El correo electrónico es requerido",
                   pattern: emailPattern,
                 })}
                 type="email"
@@ -130,7 +130,7 @@ const UserInformation = () => {
               loading={editMode ? isSubmitting : false}
               disabled={editMode ? !isDirty || !getValues("email") : false}
             >
-              {editMode ? "Save" : "Edit"}
+              {editMode ? "Guardar" : "Editar"}
             </Button>
             {editMode && (
               <Button
@@ -139,7 +139,7 @@ const UserInformation = () => {
                 onClick={onCancel}
                 disabled={isSubmitting}
               >
-                Cancel
+                Cancelar
               </Button>
             )}
           </Flex>

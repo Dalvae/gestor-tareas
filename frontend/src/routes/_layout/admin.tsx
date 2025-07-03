@@ -60,11 +60,11 @@ function UsersTable() {
       <Table.Root size={{ base: "sm", md: "md" }}>
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader w="20%">Full name</Table.ColumnHeader>
-            <Table.ColumnHeader w="25%">Email</Table.ColumnHeader>
-            <Table.ColumnHeader w="15%">Role</Table.ColumnHeader>
-            <Table.ColumnHeader w="20%">Status</Table.ColumnHeader>
-            <Table.ColumnHeader w="20%">Actions</Table.ColumnHeader>
+            <Table.ColumnHeader w="20%">Nombre completo</Table.ColumnHeader>
+            <Table.ColumnHeader w="25%">Correo electrónico</Table.ColumnHeader>
+            <Table.ColumnHeader w="15%">Rol</Table.ColumnHeader>
+            <Table.ColumnHeader w="20%">Estado</Table.ColumnHeader>
+            <Table.ColumnHeader w="20%">Acciones</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -74,16 +74,16 @@ function UsersTable() {
                 {user.full_name || "N/A"}
                 {currentUser?.id === user.id && (
                   <Badge ml="1" colorScheme="teal">
-                    You
+                    Tú
                   </Badge>
                 )}
               </Table.Cell>
               <Table.Cell w="25%">{user.email}</Table.Cell>
               <Table.Cell w="15%">
-                {user.is_superuser ? "Superuser" : "User"}
+                {user.is_superuser ? "Superusuario" : "Usuario"}
               </Table.Cell>
               <Table.Cell w="20%">
-                {user.is_active ? "Active" : "Inactive"}
+                {user.is_active ? "Activo" : "Inactivo"}
               </Table.Cell>
               <Table.Cell w="20%">
                 <UserActionsMenu
@@ -116,7 +116,7 @@ function Admin() {
   return (
     <Container maxW="full">
       <Heading size="lg" pt={12}>
-        Users Management
+        Gestión de Usuarios
       </Heading>
 
       <AddUser />

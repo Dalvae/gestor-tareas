@@ -57,10 +57,10 @@ function TasksTable() {
     return (
       <Flex direction="column" align="center" justify="center" h="50vh">
         <Text fontSize="xl" fontWeight="bold">
-          You don't have any tasks yet
+          Aún no tienes tareas
         </Text>
         <Text mt={2}>
-          Add a new task to get started
+          Añade una nueva tarea para empezar
         </Text>
       </Flex>
     )
@@ -71,12 +71,12 @@ function TasksTable() {
       <Table.Root size={{ base: "sm", md: "md" }}>
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader w="20%">Title</Table.ColumnHeader>
-            <Table.ColumnHeader w="30%">Description</Table.ColumnHeader>
-            <Table.ColumnHeader w="15%">Due Date</Table.ColumnHeader>
-            <Table.ColumnHeader w="10%">Status</Table.ColumnHeader>
-            <Table.ColumnHeader w="10%">Priority</Table.ColumnHeader>
-            <Table.ColumnHeader w="15%">Actions</Table.ColumnHeader>
+            <Table.ColumnHeader w="20%">Título</Table.ColumnHeader>
+            <Table.ColumnHeader w="30%">Descripción</Table.ColumnHeader>
+            <Table.ColumnHeader w="15%">Fecha de Vencimiento</Table.ColumnHeader>
+            <Table.ColumnHeader w="10%">Estado</Table.ColumnHeader>
+            <Table.ColumnHeader w="10%">Prioridad</Table.ColumnHeader>
+            <Table.ColumnHeader w="15%">Acciones</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -126,7 +126,7 @@ function Tasks() {
   return (
     <Container maxW="full">
       <Heading size="lg" pt={12}>
-        Tasks Management
+        Gestión de Tareas
       </Heading>
 
       <AddTask />

@@ -34,11 +34,11 @@ const DeleteTask = ({ id }: { id: string }) => {
   const mutation = useMutation({
     mutationFn: deleteTask,
     onSuccess: () => {
-      showSuccessToast("The task was deleted successfully")
+      showSuccessToast("La tarea fue eliminada exitosamente")
       setIsOpen(false)
     },
     onError: () => {
-      showErrorToast("An error occurred while deleting the task")
+      showErrorToast("Ocurrió un error al eliminar la tarea")
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] })
@@ -60,18 +60,18 @@ const DeleteTask = ({ id }: { id: string }) => {
       <DialogTrigger asChild>
         <MenuItem onClick={() => setIsOpen(true)} value="delete-task">
           <FiTrash2 fontSize="16px" />
-          Delete Task
+          Eliminar Tarea
         </MenuItem>
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Delete Task</DialogTitle>
+            <DialogTitle>Eliminar Tarea</DialogTitle>
           </DialogHeader>
           <DialogBody>
             <Text mb={4}>
-              This task will be permanently deleted. Are you sure? You will not
-              be able to undo this action.
+              Esta tarea se eliminará permanentemente. ¿Estás seguro? No podrás
+              deshacer esta acción.
             </Text>
           </DialogBody>
 
@@ -83,7 +83,7 @@ const DeleteTask = ({ id }: { id: string }) => {
                 disabled={isSubmitting}
                 onClick={() => setIsOpen(false)}
               >
-                Cancel
+                Cancelar
               </Button>
             </DialogActionTrigger>
             <Button
@@ -92,7 +92,7 @@ const DeleteTask = ({ id }: { id: string }) => {
               type="submit"
               loading={isSubmitting}
             >
-              Delete
+              Eliminar
             </Button>
           </DialogFooter>
           <DialogCloseTrigger onClick={() => setIsOpen(false)} />

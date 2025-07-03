@@ -51,7 +51,7 @@ const EditTask = ({ task }: EditTaskProps) => {
   const mutation = useMutation({
     mutationFn: (data: TaskUpdate) => TasksService.updateTask({ id: task.id, requestBody: data }),
     onSuccess: () => {
-      showSuccessToast("Task updated successfully.")
+      showSuccessToast("Tarea actualizada exitosamente.")
       reset()
       setIsOpen(false)
     },
@@ -72,41 +72,41 @@ const EditTask = ({ task }: EditTaskProps) => {
       <DialogTrigger asChild>
         <MenuItem onClick={() => setIsOpen(true)} value="edit-task">
           <FiEdit fontSize="16px" />
-          Edit Task
+          Editar Tarea
         </MenuItem>
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Edit Task</DialogTitle>
+            <DialogTitle>Editar Tarea</DialogTitle>
           </DialogHeader>
           <DialogBody>
-            <Text mb={4}>Update the task details below.</Text>
+            <Text mb={4}>Actualiza los detalles de la tarea a continuación.</Text>
             <Flex direction={{ base: "column", md: "row" }} gap={4}>
-              <Field required label="Title">
+              <Field required label="Título">
                 <Input
                   type="text"
-                  {...register("title", { required: "Title is required" })}
-                  placeholder="Task title"
+                  {...register("title", { required: "El título es requerido" })}
+                  placeholder="Título de la tarea"
                 />
               </Field>
-              <Field label="Description">
+              <Field label="Descripción">
                 <Textarea
                   {...register("description")}
-                  placeholder="Task description"
+                  placeholder="Descripción de la tarea"
                 />
               </Field>
             </Flex>
             <Flex direction={{ base: "column", md: "row" }} gap={4} mt={4}>
-              <Field label="Due Date">
+              <Field label="Fecha de Vencimiento">
                 <Input type="date" {...register("due_date")} />
               </Field>
-              <Field label="Status">
-                <Input type="text" {...register("status")} placeholder="pending" />
+              <Field label="Estado">
+                <Input type="text" {...register("status")} placeholder="pendiente" />
               </Field>
-              <Field label="Priority">
+              <Field label="Prioridad">
                 <Input type="text" {...register("priority")}
-                  placeholder="medium" />
+                  placeholder="media" />
               </Field>
             </Flex>
           </DialogBody>
@@ -119,7 +119,7 @@ const EditTask = ({ task }: EditTaskProps) => {
                 disabled={isSubmitting}
                 onClick={() => setIsOpen(false)}
               >
-                Cancel
+                Cancelar
               </Button>
             </DialogActionTrigger>
             <Button
@@ -128,7 +128,7 @@ const EditTask = ({ task }: EditTaskProps) => {
               type="submit"
               loading={isSubmitting}
             >
-              Save
+              Guardar
             </Button>
           </DialogFooter>
           <DialogCloseTrigger onClick={() => setIsOpen(false)} />
