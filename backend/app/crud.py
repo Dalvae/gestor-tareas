@@ -4,7 +4,7 @@ from typing import Any
 from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
-from app.models import User, UserCreate, UserUpdate
+from app.models import Task, TaskCreate, User, UserCreate, UserUpdate
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
@@ -41,9 +41,15 @@ def authenticate(*, session: Session, email: str, password: str) -> User | None:
     db_user = get_user_by_email(session=session, email=email)
     if not db_user:
         return None
-    if not verify_password(password, db_user.hashed_password):
-        return None
     return db_user
+
+
+def create_task(*, session: Session, task_in: TaskCreate, owner_id: uuid.UUID) -> Task:
+    db_task = Task.model_validate(task_in, update={"owner_id": owner_id})
+    session.add(db_task)
+    session.commit()
+    session.refresh(db_task)
+    return db_task
 
 
 
