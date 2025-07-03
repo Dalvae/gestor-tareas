@@ -1,12 +1,15 @@
-import { Container, Heading, Flex, Table, Text, Badge } from "@chakra-ui/react"
+import { Container, Heading, Flex, Table, Text, Badge, ButtonGroup, Button } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { z } from "zod"
+import { useState } from "react"
+import { FaList, FaCalendarAlt } from "react-icons/fa"
 
 import { TasksService } from "@/client"
 import AddTask from "@/components/Tasks/AddTask"
 import { TaskActionsMenu } from "@/components/Common/TaskActionsMenu"
 import PendingTasks from "@/components/Pending/PendingTasks"
+import TaskCalendar from "@/components/Tasks/TaskCalendar"
 import {
   PaginationNextTrigger,
   PaginationPrevTrigger,
@@ -123,14 +126,34 @@ function TasksTable() {
 }
 
 function Tasks() {
+  const [view, setView] = useState<'list' | 'calendar'>('list')
+
   return (
     <Container maxW="full">
-      <Heading size="lg" pt={12}>
-        Gestión de Tareas
-      </Heading>
+      <Flex justify="space-between" align="center" pt={12}>
+        <Heading size="lg">
+          Gestión de Tareas
+        </Heading>
+        <ButtonGroup isAttached variant="outline">
+          <Button
+            leftIcon={<FaList />}
+            onClick={() => setView('list')}
+            colorScheme={view === 'list' ? 'blue' : 'gray'}
+          >
+            Lista
+          </Button>
+          <Button
+            leftIcon={<FaCalendarAlt />}
+            onClick={() => setView('calendar')}
+            colorScheme={view === 'calendar' ? 'blue' : 'gray'}
+          >
+            Calendario
+          </Button>
+        </ButtonGroup>
+      </Flex>
 
       <AddTask />
-      <TasksTable />
+      {view === 'list' ? <TasksTable /> : <TaskCalendar />}
     </Container>
   )
 }
