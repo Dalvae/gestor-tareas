@@ -1,4 +1,4 @@
-import { type TaskPublic, type TaskUpdate, TasksService } from "@/client"
+import { type TaskPublic, type TaskUpdate, TasksService } from "@/client";
 import {
   DialogActionTrigger,
   DialogBody,
@@ -9,35 +9,38 @@ import {
   DialogRoot,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Field } from "@/components/ui/field"
-import { MenuItem } from "@/components/ui/menu"
-import useCustomToast from "@/hooks/useCustomToast"
-import { Button, Flex, Input, Text, Textarea } from "@chakra-ui/react"
-import { Select, createListCollection } from "@chakra-ui/react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useState } from "react"
-import { Controller, type SubmitHandler, useForm } from "react-hook-form"
-import { FiEdit } from "react-icons/fi"
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/field";
+import { MenuItem } from "@/components/ui/menu";
+import useCustomToast from "@/hooks/useCustomToast";
+import { Button, Flex, Input, Text, Textarea } from "@chakra-ui/react";
+import { Select, createListCollection } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { FiEdit } from "react-icons/fi";
 
-import { TASK_PRIORITY_OPTIONS, TASK_STATUS_OPTIONS } from "@/utils/taskOptions"
+import {
+  TASK_PRIORITY_OPTIONS,
+  TASK_STATUS_OPTIONS,
+} from "@/utils/taskOptions";
 
 interface EditTaskProps {
-  task: TaskPublic
+  task: TaskPublic;
 }
 
 interface TaskUpdateForm {
-  title: string
-  description?: string
-  due_date?: string
-  status?: "pending" | "in_progress" | "completed" | "cancelled" | null
-  priority?: "low" | "medium" | "high" | null
+  title: string;
+  description?: string;
+  due_date?: string;
+  status?: "pending" | "in_progress" | "completed" | "cancelled" | null;
+  priority?: "low" | "medium" | "high" | null;
 }
 
 const EditTask = ({ task }: EditTaskProps) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const queryClient = useQueryClient()
-  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const { showSuccessToast, showErrorToast } = useCustomToast();
   const {
     register,
     handleSubmit,
@@ -55,27 +58,27 @@ const EditTask = ({ task }: EditTaskProps) => {
       priority: task.priority ?? "medium",
     },
     shouldUnregister: true,
-  })
+  });
 
   const mutation = useMutation({
     mutationFn: (data: TaskUpdate) =>
       TasksService.updateTask({ id: task.id, requestBody: data }),
     onSuccess: () => {
-      showSuccessToast("Tarea actualizada exitosamente.")
-      reset()
-      setIsOpen(false)
+      showSuccessToast("Tarea actualizada exitosamente.");
+      reset();
+      setIsOpen(false);
     },
     onError: (err: any) => {
-      showErrorToast(err.body.detail)
+      showErrorToast(err.body.detail);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] })
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
-  })
+  });
 
   const onSubmit: SubmitHandler<TaskUpdateForm> = async (data) => {
-    mutation.mutate(data)
-  }
+    mutation.mutate(data);
+  };
 
   return (
     <DialogRoot
@@ -84,7 +87,13 @@ const EditTask = ({ task }: EditTaskProps) => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <MenuItem onClick={() => setIsOpen(true)} value="edit-task">
+      <MenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(true);
+        }}
+        value="edit-task"
+      >
         <FiEdit fontSize="16px" />
         Editar Tarea
       </MenuItem>
@@ -124,10 +133,10 @@ const EditTask = ({ task }: EditTaskProps) => {
                       if (value && new Date(value) < new Date()) {
                         showErrorToast(
                           "La fecha de vencimiento debe ser en el futuro.",
-                        )
-                        return "La fecha de vencimiento debe ser en el futuro."
+                        );
+                        return "La fecha de vencimiento debe ser en el futuro.";
                       }
-                      return true
+                      return true;
                     },
                   })}
                 />
@@ -218,7 +227,7 @@ const EditTask = ({ task }: EditTaskProps) => {
         </form>
       </DialogContent>
     </DialogRoot>
-  )
-}
+  );
+};
 
-export default EditTask
+export default EditTask;
