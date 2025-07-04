@@ -107,6 +107,9 @@ const AddTask = () => {
                   {...register("due_date", {
                     validate: (value) => {
                       if (value && new Date(value) < new Date()) {
+                        showErrorToast(
+                          "La fecha de vencimiento debe ser en el futuro.",
+                        )
                         return "La fecha de vencimiento debe ser en el futuro."
                       }
                       return true
