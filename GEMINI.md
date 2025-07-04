@@ -1,5 +1,99 @@
 # Chakra UI Component Usage
 
+## Select Component
+
+The `Select` component is used to pick a value from predefined options. It follows Chakra UI's composition pattern with sub-components.
+
+**Basic Usage:**
+```tsx
+import { Select } from "@chakra-ui/react"
+
+<Select.Root>
+  <Select.Trigger>
+    <Select.ValueText />
+  </Select.Trigger>
+  <Select.Positioner>
+    <Select.Content>
+      <Select.Item value="option1">Option 1</Select.Item>
+      <Select.Item value="option2">Option 2</Select.Item>
+    </Select.Content>
+  </Select.Positioner>
+</Select.Root>
+```
+
+**With react-hook-form:**
+```tsx
+<Controller
+  name="fieldName"
+  control={control}
+  render={({ field }) => (
+    <Select.Root 
+      value={field.value} 
+      onValueChange={field.onChange}
+    >
+      <Select.Trigger>
+        <Select.ValueText />
+      </Select.Trigger>
+      <Select.Positioner>
+        <Select.Content>
+          {options.map(option => (
+            <Select.Item key={option.value} value={option.value}>
+              {option.label}
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select.Positioner>
+    </Select.Root>
+  )}
+/>
+```
+
+## Dialog Component
+
+The `Dialog` component is used to display modal dialogs and follows Chakra UI's composition pattern.
+
+**Basic Usage:**
+```tsx
+import { Dialog } from "@chakra-ui/react"
+
+<Dialog.Root>
+  <Dialog.Trigger asChild>
+    <Button>Open Dialog</Button>
+  </Dialog.Trigger>
+  <Dialog.Backdrop />
+  <Dialog.Positioner>
+    <Dialog.Content>
+      <Dialog.Header>
+        <Dialog.Title>Dialog Title</Dialog.Title>
+      </Dialog.Header>
+      <Dialog.Body>
+        Dialog content goes here
+      </Dialog.Body>
+      <Dialog.Footer>
+        <Dialog.CloseTrigger asChild>
+          <Button>Close</Button>
+        </Dialog.CloseTrigger>
+      </Dialog.Footer>
+    </Dialog.Content>
+  </Dialog.Positioner>
+</Dialog.Root>
+```
+
+**Controlled Usage:**
+```tsx
+const [isOpen, setIsOpen] = useState(false)
+
+<Dialog.Root 
+  open={isOpen} 
+  onOpenChange={({ open }) => setIsOpen(open)}
+>
+  <Dialog.Trigger asChild>
+    <Button onClick={() => setIsOpen(true)}>Open</Button>
+  </Dialog.Trigger>
+  {/* ... rest of dialog ... */}
+</Dialog.Root>
+```
+
 ## Field Component
 
 The `Field` component in this project's Chakra UI setup is a custom component located at `frontend/src/components/ui/field.tsx`. It is designed to simplify form field creation by encapsulating `Field.Label`, `Field.RequiredIndicator`, `Field.HelperText`, and `Field.ErrorText`.
