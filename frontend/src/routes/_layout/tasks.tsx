@@ -1,14 +1,23 @@
-import { Container, Heading, Flex, Table, Text, Badge, ButtonGroup, Button } from "@chakra-ui/react"
+import {
+  Badge,
+  Button,
+  ButtonGroup,
+  Container,
+  Flex,
+  Heading,
+  Table,
+  Text,
+} from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { z } from "zod"
 import { useState } from "react"
-import { FaList, FaCalendarAlt } from "react-icons/fa"
+import { FaCalendarAlt, FaList } from "react-icons/fa"
+import { z } from "zod"
 
 import { TasksService } from "@/client"
-import AddTask from "@/components/Tasks/AddTask"
 import { TaskActionsMenu } from "@/components/Common/TaskActionsMenu"
 import PendingTasks from "@/components/Pending/PendingTasks"
+import AddTask from "@/components/Tasks/AddTask"
 import TaskCalendar from "@/components/Tasks/TaskCalendar"
 import {
   PaginationNextTrigger,
@@ -62,9 +71,7 @@ function TasksTable() {
         <Text fontSize="xl" fontWeight="bold">
           Aún no tienes tareas
         </Text>
-        <Text mt={2}>
-          Añade una nueva tarea para empezar
-        </Text>
+        <Text mt={2}>Añade una nueva tarea para empezar</Text>
       </Flex>
     )
   }
@@ -76,7 +83,9 @@ function TasksTable() {
           <Table.Row>
             <Table.ColumnHeader w="20%">Título</Table.ColumnHeader>
             <Table.ColumnHeader w="30%">Descripción</Table.ColumnHeader>
-            <Table.ColumnHeader w="15%">Fecha de Vencimiento</Table.ColumnHeader>
+            <Table.ColumnHeader w="15%">
+              Fecha de Vencimiento
+            </Table.ColumnHeader>
             <Table.ColumnHeader w="10%">Estado</Table.ColumnHeader>
             <Table.ColumnHeader w="10%">Prioridad</Table.ColumnHeader>
             <Table.ColumnHeader w="15%">Acciones</Table.ColumnHeader>
@@ -86,19 +95,34 @@ function TasksTable() {
           {tasks?.map((task) => (
             <Table.Row key={task.id} opacity={isPlaceholderData ? 0.5 : 1}>
               <Table.Cell w="20%">{task.title}</Table.Cell>
-              <Table.Cell w="30%" color={!task.description ? "gray" : "inherit"}>
+              <Table.Cell
+                w="30%"
+                color={!task.description ? "gray" : "inherit"}
+              >
                 {task.description || "N/A"}
               </Table.Cell>
               <Table.Cell w="15%">
-                {task.due_date ? new Date(task.due_date).toLocaleDateString() : "N/A"}
+                {task.due_date
+                  ? new Date(task.due_date).toLocaleDateString()
+                  : "N/A"}
               </Table.Cell>
               <Table.Cell w="10%">
-                <Badge colorScheme={task.status === "completed" ? "green" : "orange"}>
+                <Badge
+                  colorScheme={task.status === "completed" ? "green" : "orange"}
+                >
                   {task.status}
                 </Badge>
               </Table.Cell>
               <Table.Cell w="10%">
-                <Badge colorScheme={task.priority === "high" ? "red" : task.priority === "medium" ? "yellow" : "blue"}>
+                <Badge
+                  colorScheme={
+                    task.priority === "high"
+                      ? "red"
+                      : task.priority === "medium"
+                        ? "yellow"
+                        : "blue"
+                  }
+                >
                   {task.priority}
                 </Badge>
               </Table.Cell>
@@ -126,34 +150,36 @@ function TasksTable() {
 }
 
 function Tasks() {
-  const [view, setView] = useState<'list' | 'calendar'>('list')
+  const [view, setView] = useState<"list" | "calendar">("list")
 
   return (
     <Container maxW="full">
       <Flex justify="space-between" align="center" pt={12}>
-        <Heading size="lg">
-          Gestión de Tareas
-        </Heading>
-        <ButtonGroup isAttached variant="outline">
+        <Heading size="lg">Gestión de Tareas</Heading>
+        <ButtonGroup attached variant="outline">
           <Button
-            leftIcon={<FaList />}
-            onClick={() => setView('list')}
-            colorScheme={view === 'list' ? 'blue' : 'gray'}
+            onClick={() => setView("list")}
+            colorScheme={view === "list" ? "blue" : "gray"}
           >
-            Lista
+            <Flex align="center" gap={2}>
+              <FaList />
+              Lista
+            </Flex>
           </Button>
           <Button
-            leftIcon={<FaCalendarAlt />}
-            onClick={() => setView('calendar')}
-            colorScheme={view === 'calendar' ? 'blue' : 'gray'}
+            onClick={() => setView("calendar")}
+            colorScheme={view === "calendar" ? "blue" : "gray"}
           >
-            Calendario
+            <Flex align="center" gap={2}>
+              <FaCalendarAlt />
+              Calendario
+            </Flex>
           </Button>
         </ButtonGroup>
       </Flex>
 
       <AddTask />
-      {view === 'list' ? <TasksTable /> : <TaskCalendar />}
+      {view === "list" ? <TasksTable /> : <TaskCalendar />}
     </Container>
   )
 }

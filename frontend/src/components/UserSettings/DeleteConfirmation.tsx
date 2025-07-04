@@ -72,9 +72,9 @@ const DeleteConfirmation = () => {
             <DialogBody>
               <Text mb={4}>
                 Todos los datos de tu cuenta serán{" "}
-                <strong>eliminados permanentemente.</strong> Si estás seguro, haz
-                clic en <strong>"Confirmar"</strong> para continuar. Esta acción no
-                se puede deshacer.
+                <strong>eliminados permanentemente.</strong> Si estás seguro,
+                haz clic en <strong>"Confirmar"</strong> para continuar. Esta
+                acción no se puede deshacer.
               </Text>
             </DialogBody>
 

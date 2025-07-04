@@ -96,7 +96,8 @@ const AddUser = () => {
           </DialogHeader>
           <DialogBody>
             <Text mb={4}>
-              Rellena el formulario a continuación para añadir un nuevo usuario al sistema.
+              Rellena el formulario a continuación para añadir un nuevo usuario
+              al sistema.
             </Text>
             <VStack gap={4}>
               <Field

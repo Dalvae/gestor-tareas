@@ -69,8 +69,8 @@ const DeleteUser = ({ id }: { id: string }) => {
           </DialogHeader>
           <DialogBody>
             <Text mb={4}>
-              Este usuario se eliminará permanentemente. ¿Estás seguro? No podrás
-              deshacer esta acción.
+              Este usuario se eliminará permanentemente. ¿Estás seguro? No
+              podrás deshacer esta acción.
             </Text>
           </DialogBody>
 

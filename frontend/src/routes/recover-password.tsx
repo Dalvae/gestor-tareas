@@ -45,7 +45,9 @@ function RecoverPassword() {
   const mutation = useMutation({
     mutationFn: recoverPassword,
     onSuccess: () => {
-      showSuccessToast("Correo electrónico de recuperación de contraseña enviado exitosamente.")
+      showSuccessToast(
+        "Correo electrónico de recuperación de contraseña enviado exitosamente.",
+      )
       reset()
     },
     onError: (err: ApiError) => {
@@ -72,7 +74,8 @@ function RecoverPassword() {
         Recuperar Contraseña
       </Heading>
       <Text textAlign="center">
-        Se enviará un correo electrónico de recuperación de contraseña a la cuenta registrada.
+        Se enviará un correo electrónico de recuperación de contraseña a la
+        cuenta registrada.
       </Text>
       <Field invalid={!!errors.email} errorText={errors.email?.message}>
         <InputGroup w="100%" startElement={<FiMail />}>

@@ -96,7 +96,9 @@ const EditUser = ({ user }: EditUserProps) => {
             <DialogTitle>Editar Usuario</DialogTitle>
           </DialogHeader>
           <DialogBody>
-            <Text mb={4}>Actualiza los detalles del usuario a continuación.</Text>
+            <Text mb={4}>
+              Actualiza los detalles del usuario a continuación.
+            </Text>
             <VStack gap={4}>
               <Field
                 required

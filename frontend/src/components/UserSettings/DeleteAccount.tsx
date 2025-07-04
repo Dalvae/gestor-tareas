@@ -9,8 +9,7 @@ const DeleteAccount = () => {
         Eliminar Cuenta
       </Heading>
       <Text>
-        Elimina permanentemente tus datos y todo lo asociado a tu
-        cuenta.
+        Elimina permanentemente tus datos y todo lo asociado a tu cuenta.
       </Text>
       <DeleteConfirmation />
     </Container>

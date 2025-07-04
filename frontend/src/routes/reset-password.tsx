@@ -82,7 +82,8 @@ function ResetPassword() {
         Restablecer Contraseña
       </Heading>
       <Text textAlign="center">
-        Por favor, introduce tu nueva contraseña y confírmala para restablecer tu contraseña.
+        Por favor, introduce tu nueva contraseña y confírmala para restablecer
+        tu contraseña.
       </Text>
       <PasswordInput
         startElement={<FiLock />}

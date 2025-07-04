@@ -103,7 +103,7 @@ function UsersTable() {
         >
           <Flex>
             <PaginationPrevTrigger />
-            
+
             <PaginationNextTrigger />
           </Flex>
         </PaginationRoot>
