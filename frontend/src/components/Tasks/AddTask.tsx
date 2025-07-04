@@ -18,11 +18,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 
-const TASK_PRIORITY_OPTIONS = [
-  { value: "low", label: "Baja" },
-  { value: "medium", label: "Media" },
-  { value: "high", label: "Alta" },
-]
+import { TASK_PRIORITY_OPTIONS } from "@/utils/taskOptions";
 
 const AddTask = () => {
   const [isOpen, setIsOpen] = useState(false)

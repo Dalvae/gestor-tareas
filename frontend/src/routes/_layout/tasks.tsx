@@ -7,73 +7,88 @@ import {
   Heading,
   Table,
   Text,
-} from "@chakra-ui/react"
-import { useQuery } from "@tanstack/react-query"
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { useState } from "react"
-import { FaCalendarAlt, FaList } from "react-icons/fa"
-import { z } from "zod"
+} from "@chakra-ui/react";
+import { Select, createListCollection } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { FaCalendarAlt, FaList } from "react-icons/fa";
+import { z } from "zod";
 
-import { TasksService } from "@/client"
-import { TaskActionsMenu } from "@/components/Common/TaskActionsMenu"
-import PendingTasks from "@/components/Pending/PendingTasks"
-import AddTask from "@/components/Tasks/AddTask"
-import TaskCalendar from "@/components/Tasks/TaskCalendar"
+import { TasksService } from "@/client";
+import { TaskActionsMenu } from "@/components/Common/TaskActionsMenu";
+import PendingTasks from "@/components/Pending/PendingTasks";
+import AddTask from "@/components/Tasks/AddTask";
+import TaskCalendar from "@/components/Tasks/TaskCalendar";
 import {
   PaginationNextTrigger,
   PaginationPrevTrigger,
   PaginationRoot,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
+import { Field } from "@/components/ui/field";
+import { TASK_STATUS_OPTIONS, TASK_PRIORITY_OPTIONS } from "@/utils/taskOptions";
 
 const tasksSearchSchema = z.object({
   page: z.number().catch(1),
-})
+  status: z.enum(["all", "pending", "in_progress", "completed", "cancelled"]).catch("all"),
+  priority: z.enum(["all", "low", "medium", "high"]).catch("all"),
+});
 
-const PER_PAGE = 5
+const PER_PAGE = 5;
 
-function getTasksQueryOptions({ page }: { page: number }) {
+function getTasksQueryOptions({
+  page,
+  status,
+  priority,
+}: { page: number; status: string; priority: string }) {
   return {
     queryFn: () =>
-      TasksService.readTasks({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
-    queryKey: ["tasks", { page }],
-  }
+      TasksService.readTasks({ skip: (page - 1) * PER_PAGE, limit: 100 }), // Fetch more to allow frontend filtering
+    queryKey: ["tasks", { page, status, priority }],
+  };
 }
 
 export const Route = createFileRoute("/_layout/tasks")({
   component: Tasks,
   validateSearch: (search) => tasksSearchSchema.parse(search),
-})
+});
 
 function TasksTable() {
-  const navigate = useNavigate({ from: Route.fullPath })
-  const { page } = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath });
+  const { page, status, priority } = Route.useSearch();
 
   const { data, isLoading, isPlaceholderData } = useQuery({
-    ...getTasksQueryOptions({ page }),
+    ...getTasksQueryOptions({ page, status, priority }),
     placeholderData: (prevData) => prevData,
-  })
+  });
 
   const setPage = (page: number) =>
     navigate({
       search: (prev: { [key: string]: string }) => ({ ...prev, page }),
-    })
+    });
 
-  const tasks = data?.data.slice(0, PER_PAGE) ?? []
-  const count = data?.count ?? 0
+  const filteredTasks = data?.data.filter((task) => {
+    const matchesStatus = status === "all" || task.status === status;
+    const matchesPriority = priority === "all" || task.priority === priority;
+    return matchesStatus && matchesPriority;
+  }) ?? [];
+
+  const tasks = filteredTasks.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const count = filteredTasks.length;
 
   if (isLoading) {
-    return <PendingTasks />
+    return <PendingTasks />;
   }
 
   if (tasks.length === 0) {
     return (
       <Flex direction="column" align="center" justify="center" h="50vh">
         <Text fontSize="xl" fontWeight="bold">
-          Aún no tienes tareas
+          No tasks found with the selected filters.
         </Text>
-        <Text mt={2}>Añade una nueva tarea para empezar</Text>
+        <Text mt={2}>Try adjusting your filters or adding new tasks.</Text>
       </Flex>
-    )
+    );
   }
 
   return (
@@ -81,14 +96,12 @@ function TasksTable() {
       <Table.Root size={{ base: "sm", md: "md" }}>
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader w="20%">Título</Table.ColumnHeader>
-            <Table.ColumnHeader w="30%">Descripción</Table.ColumnHeader>
-            <Table.ColumnHeader w="15%">
-              Fecha de Vencimiento
-            </Table.ColumnHeader>
-            <Table.ColumnHeader w="10%">Estado</Table.ColumnHeader>
-            <Table.ColumnHeader w="10%">Prioridad</Table.ColumnHeader>
-            <Table.ColumnHeader w="15%">Acciones</Table.ColumnHeader>
+            <Table.ColumnHeader w="20%">Title</Table.ColumnHeader>
+            <Table.ColumnHeader w="30%">Description</Table.ColumnHeader>
+            <Table.ColumnHeader w="15%">Due Date</Table.ColumnHeader>
+            <Table.ColumnHeader w="10%">Status</Table.ColumnHeader>
+            <Table.ColumnHeader w="10%">Priority</Table.ColumnHeader>
+            <Table.ColumnHeader w="15%">Actions</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -146,16 +159,38 @@ function TasksTable() {
         </PaginationRoot>
       </Flex>
     </>
-  )
+  );
 }
 
 function Tasks() {
-  const [view, setView] = useState<"list" | "calendar">("list")
+  const [view, setView] = useState<"list" | "calendar">("list");
+  const navigate = useNavigate({ from: Route.fullPath });
+  const { status, priority } = Route.useSearch();
+
+  const setStatus = (newStatus: string) => {
+    navigate({
+      search: (prev: { [key: string]: string }) => ({
+        ...prev,
+        status: newStatus,
+        page: 1, // Reset page when filter changes
+      }),
+    });
+  };
+
+  const setPriority = (newPriority: string) => {
+    navigate({
+      search: (prev: { [key: string]: string }) => ({
+        ...prev,
+        priority: newPriority,
+        page: 1, // Reset page when filter changes
+      }),
+    });
+  };
 
   return (
     <Container maxW="full">
-      <Flex justify="space-between" align="center" pt={12}>
-        <Heading size="lg">Gestión de Tareas</Heading>
+      <Flex justify="space-between" align="center" pt={8}>
+        <Heading size="lg">Task Management</Heading>
         <ButtonGroup attached variant="outline">
           <Button
             onClick={() => setView("list")}
@@ -163,7 +198,7 @@ function Tasks() {
           >
             <Flex align="center" gap={2}>
               <FaList />
-              Lista
+              List
             </Flex>
           </Button>
           <Button
@@ -172,14 +207,58 @@ function Tasks() {
           >
             <Flex align="center" gap={2}>
               <FaCalendarAlt />
-              Calendario
+              Calendar
             </Flex>
           </Button>
         </ButtonGroup>
       </Flex>
 
-      <AddTask />
+      <Flex mt={4} gap={4} wrap="wrap" align="flex-end">
+        <AddTask />
+        <Field label="Status">
+          <Select.Root
+            collection={createListCollection({ items: TASK_STATUS_OPTIONS })}
+            value={[status || "all"]}
+            onValueChange={(details) => setStatus(details.value[0])}
+          >
+            <Select.Trigger>
+              <Select.ValueText />
+            </Select.Trigger>
+            <Select.Positioner>
+              <Select.Content>
+                {TASK_STATUS_OPTIONS.map((option) => (
+                  <Select.Item key={option.value} item={option}>
+                    <Select.ItemText>{option.label}</Select.ItemText>
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Positioner>
+          </Select.Root>
+        </Field>
+
+        <Field label="Priority">
+          <Select.Root
+            collection={createListCollection({ items: TASK_PRIORITY_OPTIONS })}
+            value={[priority || "all"]}
+            onValueChange={(details) => setPriority(details.value[0])}
+          >
+            <Select.Trigger>
+              <Select.ValueText />
+            </Select.Trigger>
+            <Select.Positioner>
+              <Select.Content>
+                {TASK_PRIORITY_OPTIONS.map((option) => (
+                  <Select.Item key={option.value} item={option}>
+                    <Select.ItemText>{option.label}</Select.ItemText>
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Positioner>
+          </Select.Root>
+        </Field>
+      </Flex>
+
       {view === "list" ? <TasksTable /> : <TaskCalendar />}
     </Container>
-  )
+  );
 }
