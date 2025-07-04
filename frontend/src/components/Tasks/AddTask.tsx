@@ -13,12 +13,12 @@ import {
 import { Field } from "@/components/ui/field"
 import useCustomToast from "@/hooks/useCustomToast"
 import { Button, Flex, Input, Text, Textarea } from "@chakra-ui/react"
-import { Select, createListCollection } from "@chakra-ui/react";
+import { Select, createListCollection } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 
-import { TASK_PRIORITY_OPTIONS } from "@/utils/taskOptions";
+import { TASK_PRIORITY_OPTIONS } from "@/utils/taskOptions"
 
 const AddTask = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -98,19 +98,36 @@ const AddTask = () => {
               </Field>
             </Flex>
             <Flex direction={{ base: "column", md: "row" }} gap={4} mt={4}>
-              <Field label="Fecha de Vencimiento">
-                <Input type="date" {...register("due_date")} />
+              <Field
+                label="Fecha de Vencimiento"
+                errorText={formState.errors.due_date?.message}
+              >
+                <Input
+                  type="date"
+                  {...register("due_date", {
+                    validate: (value) => {
+                      if (value && new Date(value) < new Date()) {
+                        return "La fecha de vencimiento debe ser en el futuro."
+                      }
+                      return true
+                    },
+                  })}
+                />
               </Field>
-              
+
               <Field label="Prioridad">
                 <Controller
                   name="priority"
                   control={control}
                   render={({ field }) => (
                     <Select.Root
-                      collection={createListCollection({ items: TASK_PRIORITY_OPTIONS })}
+                      collection={createListCollection({
+                        items: TASK_PRIORITY_OPTIONS,
+                      })}
                       value={[field.value || "medium"]}
-                      onValueChange={(details) => field.onChange(details.value[0])}
+                      onValueChange={(details) =>
+                        field.onChange(details.value[0])
+                      }
                     >
                       <Select.Trigger>
                         <Select.ValueText />
@@ -118,10 +135,7 @@ const AddTask = () => {
                       <Select.Positioner>
                         <Select.Content>
                           {TASK_PRIORITY_OPTIONS.map((option) => (
-                            <Select.Item
-                              key={option.value}
-                              item={option}
-                            >
+                            <Select.Item key={option.value} item={option}>
                               <Select.ItemText>{option.label}</Select.ItemText>
                             </Select.Item>
                           ))}

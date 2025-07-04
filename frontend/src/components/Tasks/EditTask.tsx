@@ -14,24 +14,24 @@ import { Field } from "@/components/ui/field"
 import { MenuItem } from "@/components/ui/menu"
 import useCustomToast from "@/hooks/useCustomToast"
 import { Button, Flex, Input, Text, Textarea } from "@chakra-ui/react"
-import { Select, createListCollection } from "@chakra-ui/react";
+import { Select, createListCollection } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import { FiEdit } from "react-icons/fi"
 
-import { TASK_STATUS_OPTIONS, TASK_PRIORITY_OPTIONS } from "@/utils/taskOptions";
+import { TASK_PRIORITY_OPTIONS, TASK_STATUS_OPTIONS } from "@/utils/taskOptions"
 
 interface EditTaskProps {
   task: TaskPublic
 }
 
 interface TaskUpdateForm {
-  title: string;
-  description?: string;
-  due_date?: string;
-  status?: "pending" | "in_progress" | "completed" | "cancelled" | null;
-  priority?: "low" | "medium" | "high" | null;
+  title: string
+  description?: string
+  due_date?: string
+  status?: "pending" | "in_progress" | "completed" | "cancelled" | null
+  priority?: "low" | "medium" | "high" | null
 }
 
 const EditTask = ({ task }: EditTaskProps) => {
@@ -41,7 +41,7 @@ const EditTask = ({ task }: EditTaskProps) => {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     reset,
     control,
   } = useForm<TaskUpdateForm>({
@@ -115,8 +115,21 @@ const EditTask = ({ task }: EditTaskProps) => {
               </Field>
             </Flex>
             <Flex direction={{ base: "column", md: "row" }} gap={4} mt={4}>
-              <Field label="Fecha de Vencimiento">
-                <Input type="date" {...register("due_date")} />
+              <Field
+                label="Fecha de Vencimiento"
+                errorText={errors.due_date?.message}
+              >
+                <Input
+                  type="date"
+                  {...register("due_date", {
+                    validate: (value) => {
+                      if (value && new Date(value) < new Date()) {
+                        return "La fecha de vencimiento debe ser en el futuro."
+                      }
+                      return true
+                    },
+                  })}
+                />
               </Field>
               <Field label="Estado">
                 <Controller
@@ -124,9 +137,13 @@ const EditTask = ({ task }: EditTaskProps) => {
                   control={control}
                   render={({ field }) => (
                     <Select.Root
-                      collection={createListCollection({ items: TASK_STATUS_OPTIONS })}
+                      collection={createListCollection({
+                        items: TASK_STATUS_OPTIONS,
+                      })}
                       value={[field.value || "pending"]}
-                      onValueChange={(details) => field.onChange(details.value[0])}
+                      onValueChange={(details) =>
+                        field.onChange(details.value[0])
+                      }
                     >
                       <Select.Trigger>
                         <Select.ValueText />
@@ -134,10 +151,7 @@ const EditTask = ({ task }: EditTaskProps) => {
                       <Select.Positioner>
                         <Select.Content>
                           {TASK_STATUS_OPTIONS.map((option) => (
-                            <Select.Item
-                              key={option.value}
-                              item={option}
-                            >
+                            <Select.Item key={option.value} item={option}>
                               <Select.ItemText>{option.label}</Select.ItemText>
                             </Select.Item>
                           ))}
@@ -153,9 +167,13 @@ const EditTask = ({ task }: EditTaskProps) => {
                   control={control}
                   render={({ field }) => (
                     <Select.Root
-                      collection={createListCollection({ items: TASK_PRIORITY_OPTIONS })}
+                      collection={createListCollection({
+                        items: TASK_PRIORITY_OPTIONS,
+                      })}
                       value={[field.value || "medium"]}
-                      onValueChange={(details) => field.onChange(details.value[0])}
+                      onValueChange={(details) =>
+                        field.onChange(details.value[0])
+                      }
                     >
                       <Select.Trigger>
                         <Select.ValueText />
@@ -163,10 +181,7 @@ const EditTask = ({ task }: EditTaskProps) => {
                       <Select.Positioner>
                         <Select.Content>
                           {TASK_PRIORITY_OPTIONS.map((option) => (
-                            <Select.Item
-                              key={option.value}
-                              item={option}
-                            >
+                            <Select.Item key={option.value} item={option}>
                               <Select.ItemText>{option.label}</Select.ItemText>
                             </Select.Item>
                           ))}
