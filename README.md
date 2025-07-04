@@ -1,6 +1,6 @@
 # Sistema de Gestión de Tareas
 
-Este es un sistema de gestión de tareas completo, diseñado para ayudarte a organizar y administrar tus tareas de manera eficiente.
+Este es un sistema de gestión de tareas completo, construido a partir de [full-stack-fastapi-template](https://github.com/fastapi/full-stack-fastapi-template), diseñado para ayudarte a organizar y administrar tus tareas de manera eficiente.
 
 ## Stack Tecnológico
 
@@ -41,6 +41,14 @@ docker-compose watch
 ```
 
 Esto iniciará todos los servicios necesarios (backend, frontend, base de datos) y los mantendrá actualizados con los cambios en el código.
+
+### Acceso a la Aplicación
+
+Una vez que los servicios estén en funcionamiento:
+
+-   **Frontend:** Accede a la aplicación en tu navegador a través de `http://localhost:5173`
+-   **Backend API:** La API del backend está disponible en `http://localhost:8000`
+-   **Documentación de la API (Swagger UI):** Puedes explorar los endpoints de la API en `http://localhost:8000/docs`
 
 ## Documentación Adicional
 
