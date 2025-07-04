@@ -1,10 +1,4 @@
-import { Button, DialogTitle, Flex, Input, Text, Textarea } from "@chakra-ui/react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { SubmitHandler, useForm } from "react-hook-form"
-import { useState } from "react"
-import { FiEdit } from "react-icons/fi"
-
-import { TasksService, type TaskPublic, type TaskUpdate } from "@/client"
+import { type TaskPublic, type TaskUpdate, TasksService } from "@/client"
 import {
   DialogActionTrigger,
   DialogBody,
@@ -13,22 +7,41 @@ import {
   DialogFooter,
   DialogHeader,
   DialogRoot,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Field } from "@/components/ui/field"
 import { MenuItem } from "@/components/ui/menu"
 import useCustomToast from "@/hooks/useCustomToast"
+import { Button, Flex, Input, Text, Textarea } from "@chakra-ui/react"
+import { Select, createListCollection } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
+import { Controller, type SubmitHandler, useForm } from "react-hook-form"
+import { FiEdit } from "react-icons/fi"
+
+const TASK_STATUS_OPTIONS = [
+  { value: "pending", label: "Pendiente" },
+  { value: "in-progress", label: "En Progreso" },
+  { value: "completed", label: "Completada" },
+]
+
+const TASK_PRIORITY_OPTIONS = [
+  { value: "low", label: "Baja" },
+  { value: "medium", label: "Media" },
+  { value: "high", label: "Alta" },
+]
 
 interface EditTaskProps {
   task: TaskPublic
 }
 
 interface TaskUpdateForm {
-  title: string
-  description?: string
-  due_date?: string
-  status?: string
-  priority?: string
+  title: string;
+  description?: string;
+  due_date?: string;
+  status?: "pending" | "in_progress" | "completed" | "cancelled" | null;
+  priority?: "low" | "medium" | "high" | null;
 }
 
 const EditTask = ({ task }: EditTaskProps) => {
@@ -40,16 +53,23 @@ const EditTask = ({ task }: EditTaskProps) => {
     handleSubmit,
     formState: { isSubmitting },
     reset,
+    control,
   } = useForm<TaskUpdateForm>({
     defaultValues: {
       ...task,
-      due_date: task.due_date ? new Date(task.due_date).toISOString().split("T")[0] : undefined,
+      due_date: task.due_date
+        ? new Date(task.due_date).toISOString().split("T")[0]
+        : undefined,
       description: task.description ?? undefined,
+      status: task.status ?? "pending",
+      priority: task.priority ?? "medium",
     },
+    shouldUnregister: true,
   })
 
   const mutation = useMutation({
-    mutationFn: (data: TaskUpdate) => TasksService.updateTask({ id: task.id, requestBody: data }),
+    mutationFn: (data: TaskUpdate) =>
+      TasksService.updateTask({ id: task.id, requestBody: data }),
     onSuccess: () => {
       showSuccessToast("Tarea actualizada exitosamente.")
       reset()
@@ -68,7 +88,12 @@ const EditTask = ({ task }: EditTaskProps) => {
   }
 
   return (
-    <DialogRoot open={isOpen} onOpenChange={({ open }) => setIsOpen(open)}>
+    <DialogRoot
+      size={{ base: "xs", md: "md" }}
+      placement="center"
+      open={isOpen}
+      onOpenChange={({ open }) => setIsOpen(open)}
+    >
       <DialogTrigger asChild>
         <MenuItem onClick={() => setIsOpen(true)} value="edit-task">
           <FiEdit fontSize="16px" />
@@ -81,7 +106,9 @@ const EditTask = ({ task }: EditTaskProps) => {
             <DialogTitle>Editar Tarea</DialogTitle>
           </DialogHeader>
           <DialogBody>
-            <Text mb={4}>Actualiza los detalles de la tarea a continuación.</Text>
+            <Text mb={4}>
+              Actualiza los detalles de la tarea a continuación.
+            </Text>
             <Flex direction={{ base: "column", md: "row" }} gap={4}>
               <Field required label="Título">
                 <Input
@@ -102,11 +129,62 @@ const EditTask = ({ task }: EditTaskProps) => {
                 <Input type="date" {...register("due_date")} />
               </Field>
               <Field label="Estado">
-                <Input type="text" {...register("status")} placeholder="pendiente" />
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field }) => (
+                    <Select.Root
+                      collection={createListCollection({ items: TASK_STATUS_OPTIONS })}
+                      value={[field.value || "pending"]}
+                      onValueChange={(details) => field.onChange(details.value[0])}
+                    >
+                      <Select.Trigger>
+                        <Select.ValueText />
+                      </Select.Trigger>
+                      <Select.Positioner>
+                        <Select.Content>
+                          {TASK_STATUS_OPTIONS.map((option) => (
+                            <Select.Item
+                              key={option.value}
+                              item={option}
+                            >
+                              <Select.ItemText>{option.label}</Select.ItemText>
+                            </Select.Item>
+                          ))}
+                        </Select.Content>
+                      </Select.Positioner>
+                    </Select.Root>
+                  )}
+                />
               </Field>
               <Field label="Prioridad">
-                <Input type="text" {...register("priority")}
-                  placeholder="media" />
+                <Controller
+                  name="priority"
+                  control={control}
+                  render={({ field }) => (
+                    <Select.Root
+                      collection={createListCollection({ items: TASK_PRIORITY_OPTIONS })}
+                      value={[field.value || "medium"]}
+                      onValueChange={(details) => field.onChange(details.value[0])}
+                    >
+                      <Select.Trigger>
+                        <Select.ValueText />
+                      </Select.Trigger>
+                      <Select.Positioner>
+                        <Select.Content>
+                          {TASK_PRIORITY_OPTIONS.map((option) => (
+                            <Select.Item
+                              key={option.value}
+                              item={option}
+                            >
+                              <Select.ItemText>{option.label}</Select.ItemText>
+                            </Select.Item>
+                          ))}
+                        </Select.Content>
+                      </Select.Positioner>
+                    </Select.Root>
+                  )}
+                />
               </Field>
             </Flex>
           </DialogBody>
@@ -117,7 +195,6 @@ const EditTask = ({ task }: EditTaskProps) => {
                 variant="subtle"
                 colorPalette="gray"
                 disabled={isSubmitting}
-                onClick={() => setIsOpen(false)}
               >
                 Cancelar
               </Button>

@@ -1,8 +1,4 @@
-import { Button, DialogTitle, Flex, Input, Text, Textarea } from "@chakra-ui/react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { SubmitHandler, useForm } from "react-hook-form"
-
-import { TasksService, type TaskCreate } from "@/client"
+import { type TaskCreate, TasksService } from "@/client"
 import {
   DialogActionTrigger,
   DialogBody,
@@ -11,21 +7,51 @@ import {
   DialogFooter,
   DialogHeader,
   DialogRoot,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Field } from "@/components/ui/field"
 import useCustomToast from "@/hooks/useCustomToast"
+import { Button, Flex, Input, Text, Textarea } from "@chakra-ui/react"
+import { Select, createListCollection } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
+import { Controller, type SubmitHandler, useForm } from "react-hook-form"
+
+const TASK_PRIORITY_OPTIONS = [
+  { value: "low", label: "Baja" },
+  { value: "medium", label: "Media" },
+  { value: "high", label: "Alta" },
+]
 
 const AddTask = () => {
+  const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
-  const { register, handleSubmit, formState, reset } = useForm<TaskCreate>()
+
+  const getTomorrowDate = () => {
+    const today = new Date()
+    today.setDate(today.getDate() + 1)
+    return today.toISOString().split("T")[0]
+  }
+
+  const { register, handleSubmit, formState, reset, control } =
+    useForm<TaskCreate>({
+      defaultValues: {
+        due_date: getTomorrowDate(),
+        status: "pending",
+        priority: "medium",
+      },
+      shouldUnregister: true,
+    })
 
   const mutation = useMutation({
-    mutationFn: (data: TaskCreate) => TasksService.createTask({ requestBody: data }),
+    mutationFn: (data: TaskCreate) =>
+      TasksService.createTask({ requestBody: data }),
     onSuccess: () => {
       showSuccessToast("Tarea creada exitosamente.")
       reset()
+      setIsOpen(false)
     },
     onError: (err: any) => {
       showErrorToast(err.body.detail)
@@ -40,9 +66,14 @@ const AddTask = () => {
   }
 
   return (
-    <DialogRoot>
+    <DialogRoot
+      size={{ base: "xs", md: "md" }}
+      placement="center"
+      open={isOpen}
+      onOpenChange={({ open }) => setIsOpen(open)}
+    >
       <DialogTrigger asChild>
-        <Button value="add-task" my={4}>
+        <Button value="add-task" my={4} onClick={() => setIsOpen(true)}>
           Añadir Tarea
         </Button>
       </DialogTrigger>
@@ -52,7 +83,9 @@ const AddTask = () => {
             <DialogTitle>Añadir Tarea</DialogTitle>
           </DialogHeader>
           <DialogBody>
-            <Text mb={4}>Rellena los detalles para añadir una nueva tarea.</Text>
+            <Text mb={4}>
+              Rellena los detalles para añadir una nueva tarea.
+            </Text>
             <Flex direction={{ base: "column", md: "row" }} gap={4}>
               <Field required label="Título">
                 <Input
@@ -72,11 +105,35 @@ const AddTask = () => {
               <Field label="Fecha de Vencimiento">
                 <Input type="date" {...register("due_date")} />
               </Field>
-              <Field label="Estado">
-                <Input type="text" {...register("status")} placeholder="pendiente" />
-              </Field>
+              
               <Field label="Prioridad">
-                <Input type="text" {...register("priority")} placeholder="media" />
+                <Controller
+                  name="priority"
+                  control={control}
+                  render={({ field }) => (
+                    <Select.Root
+                      collection={createListCollection({ items: TASK_PRIORITY_OPTIONS })}
+                      value={[field.value || "medium"]}
+                      onValueChange={(details) => field.onChange(details.value[0])}
+                    >
+                      <Select.Trigger>
+                        <Select.ValueText />
+                      </Select.Trigger>
+                      <Select.Positioner>
+                        <Select.Content>
+                          {TASK_PRIORITY_OPTIONS.map((option) => (
+                            <Select.Item
+                              key={option.value}
+                              item={option}
+                            >
+                              <Select.ItemText>{option.label}</Select.ItemText>
+                            </Select.Item>
+                          ))}
+                        </Select.Content>
+                      </Select.Positioner>
+                    </Select.Root>
+                  )}
+                />
               </Field>
             </Flex>
           </DialogBody>
@@ -100,7 +157,7 @@ const AddTask = () => {
               Añadir
             </Button>
           </DialogFooter>
-          <DialogCloseTrigger />
+          <DialogCloseTrigger onClick={() => setIsOpen(false)} />
         </form>
       </DialogContent>
     </DialogRoot>

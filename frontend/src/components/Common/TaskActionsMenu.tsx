@@ -1,6 +1,6 @@
+import { MenuContent, MenuRoot, MenuTrigger } from "@/components/ui/menu"
 import { IconButton } from "@chakra-ui/react"
 import { BsThreeDotsVertical } from "react-icons/bs"
-import { MenuContent, MenuRoot, MenuTrigger } from "@/components/ui/menu"
 
 import type { TaskPublic } from "@/client"
 import DeleteTask from "../Tasks/DeleteTask"

@@ -82,19 +82,34 @@ function TasksTable() {
           {tasks?.map((task) => (
             <Table.Row key={task.id} opacity={isPlaceholderData ? 0.5 : 1}>
               <Table.Cell w="20%">{task.title}</Table.Cell>
-              <Table.Cell w="30%" color={!task.description ? "gray" : "inherit"}>
+              <Table.Cell
+                w="30%"
+                color={!task.description ? "gray" : "inherit"}
+              >
                 {task.description || "N/A"}
               </Table.Cell>
               <Table.Cell w="15%">
-                {task.due_date ? new Date(task.due_date).toLocaleDateString() : "N/A"}
+                {task.due_date
+                  ? new Date(task.due_date).toLocaleDateString()
+                  : "N/A"}
               </Table.Cell>
               <Table.Cell w="10%">
-                <Badge colorScheme={task.status === "completed" ? "green" : "orange"}>
+                <Badge
+                  colorScheme={task.status === "completed" ? "green" : "orange"}
+                >
                   {task.status}
                 </Badge>
               </Table.Cell>
               <Table.Cell w="10%">
-                <Badge colorScheme={task.priority === "high" ? "red" : task.priority === "medium" ? "yellow" : "blue"}>
+                <Badge
+                  colorScheme={
+                    task.priority === "high"
+                      ? "red"
+                      : task.priority === "medium"
+                        ? "yellow"
+                        : "blue"
+                  }
+                >
                   {task.priority}
                 </Badge>
               </Table.Cell>
