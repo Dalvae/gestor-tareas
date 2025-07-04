@@ -6,16 +6,16 @@ interface Option<T> {
 }
 
 export const TASK_STATUS_OPTIONS: Option<TaskStatus | "all">[] = [
-  { value: "all", label: "All" },
-  { value: "pending", label: "Pending" },
-  { value: "in_progress", label: "In Progress" },
-  { value: "completed", label: "Completed" },
-  { value: "cancelled", label: "Cancelled" },
+  { value: "all", label: "Todas" },
+  { value: "pending", label: "Pendiente" },
+  { value: "in_progress", label: "En Progreso" },
+  { value: "completed", label: "Completada" },
+  { value: "cancelled", label: "Cancelada" },
 ];
 
 export const TASK_PRIORITY_OPTIONS: Option<TaskPriority | "all">[] = [
-  { value: "all", label: "All" },
-  { value: "low", label: "Low" },
-  { value: "medium", label: "Medium" },
-  { value: "high", label: "High" },
+  { value: "all", label: "Todas" },
+  { value: "low", label: "Baja" },
+  { value: "medium", label: "Media" },
+  { value: "high", label: "Alta" },
 ];
