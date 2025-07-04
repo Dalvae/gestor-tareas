@@ -84,9 +84,9 @@ function TasksTable() {
     return (
       <Flex direction="column" align="center" justify="center" h="50vh">
         <Text fontSize="xl" fontWeight="bold">
-          No tasks found with the selected filters.
+          No se encontraron tareas con los filtros seleccionados.
         </Text>
-        <Text mt={2}>Try adjusting your filters or adding new tasks.</Text>
+        <Text mt={2}>Intenta ajustar tus filtros o añadir nuevas tareas.</Text>
       </Flex>
     );
   }
@@ -96,12 +96,12 @@ function TasksTable() {
       <Table.Root size={{ base: "sm", md: "md" }}>
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader w="20%">Title</Table.ColumnHeader>
-            <Table.ColumnHeader w="30%">Description</Table.ColumnHeader>
-            <Table.ColumnHeader w="15%">Due Date</Table.ColumnHeader>
-            <Table.ColumnHeader w="10%">Status</Table.ColumnHeader>
-            <Table.ColumnHeader w="10%">Priority</Table.ColumnHeader>
-            <Table.ColumnHeader w="15%">Actions</Table.ColumnHeader>
+            <Table.ColumnHeader w="20%">Título</Table.ColumnHeader>
+            <Table.ColumnHeader w="30%">Descripción</Table.ColumnHeader>
+            <Table.ColumnHeader w="15%">Fecha de Vencimiento</Table.ColumnHeader>
+            <Table.ColumnHeader w="10%">Estado</Table.ColumnHeader>
+            <Table.ColumnHeader w="10%">Prioridad</Table.ColumnHeader>
+            <Table.ColumnHeader w="15%">Acciones</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -190,7 +190,7 @@ function Tasks() {
   return (
     <Container maxW="full">
       <Flex justify="space-between" align="center" pt={8}>
-        <Heading size="lg">Task Management</Heading>
+        <Heading size="lg">Gestión de Tareas</Heading>
         <ButtonGroup attached variant="outline">
           <Button
             onClick={() => setView("list")}
@@ -198,7 +198,7 @@ function Tasks() {
           >
             <Flex align="center" gap={2}>
               <FaList />
-              List
+              Lista
             </Flex>
           </Button>
           <Button
@@ -207,55 +207,69 @@ function Tasks() {
           >
             <Flex align="center" gap={2}>
               <FaCalendarAlt />
-              Calendar
+              Calendario
             </Flex>
           </Button>
         </ButtonGroup>
       </Flex>
 
-      <Flex mt={4} gap={4} wrap="wrap" align="flex-end">
+      <Flex
+        mt={4}
+        gap={4}
+        direction={{ base: "column", md: "row" }}
+        justifyContent="space-between"
+        alignItems={{ base: "stretch", md: "center" }}
+      >
         <AddTask />
-        <Field label="Status">
-          <Select.Root
-            collection={createListCollection({ items: TASK_STATUS_OPTIONS })}
-            value={[status || "all"]}
-            onValueChange={(details) => setStatus(details.value[0])}
-          >
-            <Select.Trigger>
-              <Select.ValueText />
-            </Select.Trigger>
-            <Select.Positioner>
-              <Select.Content>
-                {TASK_STATUS_OPTIONS.map((option) => (
-                  <Select.Item key={option.value} item={option}>
-                    <Select.ItemText>{option.label}</Select.ItemText>
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Positioner>
-          </Select.Root>
-        </Field>
+        <Flex
+          gap={4}
+          direction={{ base: "column", sm: "row" }}
+          alignItems={{ base: "stretch", sm: "center" }}
+        >
+          <Field label="Filtrar por Estado" minWidth={{ md: "200px" }}>
+            <Select.Root
+              collection={createListCollection({ items: TASK_STATUS_OPTIONS })}
+              value={[status || "all"]}
+              onValueChange={(details) => setStatus(details.value[0])}
+            >
+              <Select.Trigger>
+                <Select.ValueText />
+              </Select.Trigger>
+              <Select.Positioner>
+                <Select.Content>
+                  {TASK_STATUS_OPTIONS.map((option) => (
+                    <Select.Item key={option.value} item={option}>
+                      <Select.ItemText>{option.label}</Select.ItemText>
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Select.Root>
+          </Field>
 
-        <Field label="Priority">
-          <Select.Root
-            collection={createListCollection({ items: TASK_PRIORITY_OPTIONS })}
-            value={[priority || "all"]}
-            onValueChange={(details) => setPriority(details.value[0])}
-          >
-            <Select.Trigger>
-              <Select.ValueText />
-            </Select.Trigger>
-            <Select.Positioner>
-              <Select.Content>
-                {TASK_PRIORITY_OPTIONS.map((option) => (
-                  <Select.Item key={option.value} item={option}>
-                    <Select.ItemText>{option.label}</Select.ItemText>
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Positioner>
-          </Select.Root>
-        </Field>
+          <Field label="Filtrar por Prioridad" minWidth={{ md: "200px" }}>
+            <Select.Root
+              collection={createListCollection({
+                items: TASK_PRIORITY_OPTIONS,
+              })}
+              value={[priority || "all"]}
+              onValueChange={(details) => setPriority(details.value[0])}
+            >
+              <Select.Trigger>
+                <Select.ValueText />
+              </Select.Trigger>
+              <Select.Positioner>
+                <Select.Content>
+                  {TASK_PRIORITY_OPTIONS.map((option) => (
+                    <Select.Item key={option.value} item={option}>
+                      <Select.ItemText>{option.label}</Select.ItemText>
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Select.Root>
+          </Field>
+        </Flex>
       </Flex>
 
       {view === "list" ? <TasksTable /> : <TaskCalendar />}
