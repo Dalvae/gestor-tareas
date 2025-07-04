@@ -1,5 +1,6 @@
 import datetime
 import uuid
+from enum import Enum
 
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
@@ -57,13 +58,26 @@ class UsersPublic(SQLModel):
     count: int
 
 
+class TaskStatus(str, Enum):
+    pending = "pending"
+    in_progress = "in_progress"
+    completed = "completed"
+    cancelled = "cancelled"
+
+
+class TaskPriority(str, Enum):
+    low = "low"
+    medium = "medium"
+    high = "high"
+
+
 # Shared properties
 class TaskBase(SQLModel):
     title: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=1024)
     due_date: datetime.datetime | None = Field(default=None)
-    status: str = Field(default="pending", max_length=50)
-    priority: str = Field(default="medium", max_length=50)
+    status: TaskStatus = Field(default=TaskStatus.pending, max_length=50)
+    priority: TaskPriority = Field(default=TaskPriority.medium, max_length=50)
 
 
 # Properties to receive on task creation
@@ -76,8 +90,8 @@ class TaskUpdate(TaskBase):
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=1024)
     due_date: datetime.datetime | None = Field(default=None)
-    status: str | None = Field(default=None, max_length=50)
-    priority: str | None = Field(default=None, max_length=50)
+    status: TaskStatus | None = Field(default=None, max_length=50)
+    priority: TaskPriority | None = Field(default=None, max_length=50)
 
 
 # Database model, database table inferred from class name
