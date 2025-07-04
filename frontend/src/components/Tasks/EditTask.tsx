@@ -84,12 +84,10 @@ const EditTask = ({ task }: EditTaskProps) => {
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <DialogTrigger asChild>
-        <MenuItem onClick={() => setIsOpen(true)} value="edit-task">
-          <FiEdit fontSize="16px" />
-          Editar Tarea
-        </MenuItem>
-      </DialogTrigger>
+      <MenuItem onClick={() => setIsOpen(true)} value="edit-task">
+        <FiEdit fontSize="16px" />
+        Editar Tarea
+      </MenuItem>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
