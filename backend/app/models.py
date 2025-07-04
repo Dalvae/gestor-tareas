@@ -2,7 +2,7 @@ import datetime
 import uuid
 from enum import Enum
 
-from pydantic import EmailStr
+from pydantic import EmailStr, field_validator
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -72,6 +72,10 @@ class TaskPriority(str, Enum):
 
 
 # Shared properties
+from pydantic import field_validator
+
+
+# Shared properties
 class TaskBase(SQLModel):
     title: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=1024)
@@ -82,7 +86,12 @@ class TaskBase(SQLModel):
 
 # Properties to receive on task creation
 class TaskCreate(TaskBase):
-    pass
+    @field_validator("due_date")
+    @classmethod
+    def validate_due_date(cls, v: datetime.datetime | None) -> datetime.datetime | None:
+        if v is not None and v < datetime.datetime.now():
+            raise ValueError("Due date must be in the future")
+        return v
 
 
 # Properties to receive on task update
@@ -92,6 +101,13 @@ class TaskUpdate(TaskBase):
     due_date: datetime.datetime | None = Field(default=None)
     status: TaskStatus | None = Field(default=None, max_length=50)
     priority: TaskPriority | None = Field(default=None, max_length=50)
+
+    @field_validator("due_date")
+    @classmethod
+    def validate_due_date(cls, v: datetime.datetime | None) -> datetime.datetime | None:
+        if v is not None and v < datetime.datetime.now():
+            raise ValueError("Due date must be in the future")
+        return v
 
 
 # Database model, database table inferred from class name

@@ -7,34 +7,36 @@ import {
   Heading,
   Table,
   Text,
-} from "@chakra-ui/react";
-import { Select, createListCollection } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { FaCalendarAlt, FaList } from "react-icons/fa";
-import { z } from "zod";
+} from "@chakra-ui/react"
+import { Select, createListCollection } from "@chakra-ui/react"
+import { useQuery } from "@tanstack/react-query"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { useState } from "react"
+import { FaCalendarAlt, FaList } from "react-icons/fa"
+import { z } from "zod"
 
-import { TasksService } from "@/client";
-import { TaskActionsMenu } from "@/components/Common/TaskActionsMenu";
-import PendingTasks from "@/components/Pending/PendingTasks";
-import AddTask from "@/components/Tasks/AddTask";
-import TaskCalendar from "@/components/Tasks/TaskCalendar";
+import { TasksService } from "@/client"
+import { TaskActionsMenu } from "@/components/Common/TaskActionsMenu"
+import PendingTasks from "@/components/Pending/PendingTasks"
+import AddTask from "@/components/Tasks/AddTask"
+import TaskCalendar from "@/components/Tasks/TaskCalendar"
+import { Field } from "@/components/ui/field"
 import {
   PaginationNextTrigger,
   PaginationPrevTrigger,
   PaginationRoot,
-} from "@/components/ui/pagination";
-import { Field } from "@/components/ui/field";
-import { TASK_STATUS_OPTIONS, TASK_PRIORITY_OPTIONS } from "@/utils/taskOptions";
+} from "@/components/ui/pagination"
+import { TASK_PRIORITY_OPTIONS, TASK_STATUS_OPTIONS } from "@/utils/taskOptions"
 
 const tasksSearchSchema = z.object({
   page: z.number().catch(1),
-  status: z.enum(["all", "pending", "in_progress", "completed", "cancelled"]).catch("all"),
+  status: z
+    .enum(["all", "pending", "in_progress", "completed", "cancelled"])
+    .catch("all"),
   priority: z.enum(["all", "low", "medium", "high"]).catch("all"),
-});
+})
 
-const PER_PAGE = 5;
+const PER_PAGE = 5
 
 function getTasksQueryOptions({
   page,
@@ -45,39 +47,40 @@ function getTasksQueryOptions({
     queryFn: () =>
       TasksService.readTasks({ skip: (page - 1) * PER_PAGE, limit: 100 }), // Fetch more to allow frontend filtering
     queryKey: ["tasks", { page, status, priority }],
-  };
+  }
 }
 
 export const Route = createFileRoute("/_layout/tasks")({
   component: Tasks,
   validateSearch: (search) => tasksSearchSchema.parse(search),
-});
+})
 
 function TasksTable() {
-  const navigate = useNavigate({ from: Route.fullPath });
-  const { page, status, priority } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath })
+  const { page, status, priority } = Route.useSearch()
 
   const { data, isLoading, isPlaceholderData } = useQuery({
     ...getTasksQueryOptions({ page, status, priority }),
     placeholderData: (prevData) => prevData,
-  });
+  })
 
   const setPage = (page: number) =>
     navigate({
       search: (prev: { [key: string]: string }) => ({ ...prev, page }),
-    });
+    })
 
-  const filteredTasks = data?.data.filter((task) => {
-    const matchesStatus = status === "all" || task.status === status;
-    const matchesPriority = priority === "all" || task.priority === priority;
-    return matchesStatus && matchesPriority;
-  }) ?? [];
+  const filteredTasks =
+    data?.data.filter((task) => {
+      const matchesStatus = status === "all" || task.status === status
+      const matchesPriority = priority === "all" || task.priority === priority
+      return matchesStatus && matchesPriority
+    }) ?? []
 
-  const tasks = filteredTasks.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-  const count = filteredTasks.length;
+  const tasks = filteredTasks.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+  const count = filteredTasks.length
 
   if (isLoading) {
-    return <PendingTasks />;
+    return <PendingTasks />
   }
 
   if (tasks.length === 0) {
@@ -88,7 +91,7 @@ function TasksTable() {
         </Text>
         <Text mt={2}>Intenta ajustar tus filtros o añadir nuevas tareas.</Text>
       </Flex>
-    );
+    )
   }
 
   return (
@@ -98,7 +101,9 @@ function TasksTable() {
           <Table.Row>
             <Table.ColumnHeader w="20%">Título</Table.ColumnHeader>
             <Table.ColumnHeader w="30%">Descripción</Table.ColumnHeader>
-            <Table.ColumnHeader w="15%">Fecha de Vencimiento</Table.ColumnHeader>
+            <Table.ColumnHeader w="15%">
+              Fecha de Vencimiento
+            </Table.ColumnHeader>
             <Table.ColumnHeader w="10%">Estado</Table.ColumnHeader>
             <Table.ColumnHeader w="10%">Prioridad</Table.ColumnHeader>
             <Table.ColumnHeader w="15%">Acciones</Table.ColumnHeader>
@@ -159,13 +164,13 @@ function TasksTable() {
         </PaginationRoot>
       </Flex>
     </>
-  );
+  )
 }
 
 function Tasks() {
-  const [view, setView] = useState<"list" | "calendar">("list");
-  const navigate = useNavigate({ from: Route.fullPath });
-  const { status, priority } = Route.useSearch();
+  const [view, setView] = useState<"list" | "calendar">("list")
+  const navigate = useNavigate({ from: Route.fullPath })
+  const { status, priority } = Route.useSearch()
 
   const setStatus = (newStatus: string) => {
     navigate({
@@ -174,8 +179,8 @@ function Tasks() {
         status: newStatus,
         page: 1, // Reset page when filter changes
       }),
-    });
-  };
+    })
+  }
 
   const setPriority = (newPriority: string) => {
     navigate({
@@ -184,8 +189,8 @@ function Tasks() {
         priority: newPriority,
         page: 1, // Reset page when filter changes
       }),
-    });
-  };
+    })
+  }
 
   return (
     <Container maxW="full">
@@ -274,5 +279,5 @@ function Tasks() {
 
       {view === "list" ? <TasksTable /> : <TaskCalendar />}
     </Container>
-  );
+  )
 }

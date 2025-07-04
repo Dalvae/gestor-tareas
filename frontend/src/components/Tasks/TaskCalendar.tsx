@@ -1,27 +1,27 @@
-import { TasksService } from "@/client";
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import moment from "moment";
-import { useEffect, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import { TasksService } from "@/client"
+import { Box, Flex, Heading, Text } from "@chakra-ui/react"
+import { useQuery } from "@tanstack/react-query"
+import moment from "moment"
+import { useEffect, useState } from "react"
+import { Calendar, momentLocalizer } from "react-big-calendar"
+import "react-big-calendar/lib/css/react-big-calendar.css"
 
-const localizer = momentLocalizer(moment);
+const localizer = momentLocalizer(moment)
 
 interface CalendarEvent {
-  title: string;
-  start: Date;
-  end: Date;
-  allDay: boolean;
+  title: string
+  start: Date
+  end: Date
+  allDay: boolean
 }
 
 const TaskCalendar = () => {
   const { data, isLoading } = useQuery({
     queryFn: () => TasksService.readTasks({ skip: 0, limit: 100 }),
     queryKey: ["tasks"],
-  });
+  })
 
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [events, setEvents] = useState<CalendarEvent[]>([])
 
   useEffect(() => {
     if (data?.data) {
@@ -30,17 +30,17 @@ const TaskCalendar = () => {
         start: moment(task.due_date).toDate(),
         end: moment(task.due_date).add(1, "day").toDate(), // End date is exclusive for allDay events
         allDay: true,
-      }));
-      setEvents(formattedEvents);
+      }))
+      setEvents(formattedEvents)
     }
-  }, [data]);
+  }, [data])
 
   if (isLoading) {
     return (
       <Flex direction="column" align="center" justify="center" h="50vh">
         <Heading size="lg">Cargando Calendario...</Heading>
       </Flex>
-    );
+    )
   }
 
   return (
@@ -81,7 +81,7 @@ const TaskCalendar = () => {
         )}
       </Box>
     </Flex>
-  );
-};
+  )
+}
 
-export default TaskCalendar;
+export default TaskCalendar
