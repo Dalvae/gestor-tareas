@@ -1,12 +1,19 @@
-import { Flex, Heading, Text, Box } from "@chakra-ui/react"
-import { Calendar, momentLocalizer } from "react-big-calendar"
-import moment from "moment"
-import "react-big-calendar/lib/css/react-big-calendar.css"
-import { useQuery } from "@tanstack/react-query"
 import { TasksService } from "@/client"
+import { Box, Flex, Heading, Text } from "@chakra-ui/react"
+import { useQuery } from "@tanstack/react-query"
+import moment from "moment"
 import { useEffect, useState } from "react"
+import { Calendar, momentLocalizer } from "react-big-calendar"
+import "react-big-calendar/lib/css/react-big-calendar.css"
 
 const localizer = momentLocalizer(moment)
+
+interface CalendarEvent {
+  title: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+}
 
 const TaskCalendar = () => {
   const { data, isLoading } = useQuery({
@@ -14,14 +21,14 @@ const TaskCalendar = () => {
     queryKey: ["tasks"],
   })
 
-  const [events, setEvents] = useState([])
+  const [events, setEvents] = useState<CalendarEvent[]>([])
 
   useEffect(() => {
     if (data?.data) {
       const formattedEvents = data.data.map((task) => ({
         title: task.title,
         start: moment(task.due_date).toDate(),
-        end: moment(task.due_date).add(1, 'day').toDate(), // End date is exclusive for allDay events
+        end: moment(task.due_date).add(1, "day").toDate(), // End date is exclusive for allDay events
         allDay: true,
       }))
       setEvents(formattedEvents)
