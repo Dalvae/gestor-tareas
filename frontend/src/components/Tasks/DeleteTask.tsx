@@ -18,8 +18,7 @@ import {
 import { MenuItem } from "@/components/ui/menu"
 import useCustomToast from "@/hooks/useCustomToast"
 
-const DeleteTask = ({ id }: { id: string }) => {
-  const [isOpen, setIsOpen] = useState(false)
+const DeleteTask = ({ id, isOpen, onOpenChange }: { id: string; isOpen: boolean; onOpenChange: (open: boolean) => void }) => {
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const {
@@ -35,7 +34,7 @@ const DeleteTask = ({ id }: { id: string }) => {
     mutationFn: deleteTask,
     onSuccess: () => {
       showSuccessToast("La tarea fue eliminada exitosamente")
-      setIsOpen(false)
+      onOpenChange(false)
     },
     onError: () => {
       showErrorToast("Ocurrió un error al eliminar la tarea")
@@ -55,14 +54,8 @@ const DeleteTask = ({ id }: { id: string }) => {
       placement="center"
       role="alertdialog"
       open={isOpen}
-      onOpenChange={({ open }) => setIsOpen(open)}
+      onOpenChange={({ open }) => onOpenChange(open)}
     >
-      <DialogTrigger asChild>
-        <MenuItem onClick={() => setIsOpen(true)} value="delete-task">
-          <FiTrash2 fontSize="16px" />
-          Eliminar Tarea
-        </MenuItem>
-      </DialogTrigger>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
@@ -81,7 +74,6 @@ const DeleteTask = ({ id }: { id: string }) => {
                 variant="subtle"
                 colorPalette="gray"
                 disabled={isSubmitting}
-                onClick={() => setIsOpen(false)}
               >
                 Cancelar
               </Button>
@@ -95,7 +87,7 @@ const DeleteTask = ({ id }: { id: string }) => {
               Eliminar
             </Button>
           </DialogFooter>
-          <DialogCloseTrigger onClick={() => setIsOpen(false)} />
+          <DialogCloseTrigger />
         </form>
       </DialogContent>
     </DialogRoot>

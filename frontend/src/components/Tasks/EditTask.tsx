@@ -8,18 +8,13 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Field } from "@/components/ui/field";
-import { MenuItem } from "@/components/ui/menu";
 import useCustomToast from "@/hooks/useCustomToast";
 import { Button, Flex, Input, Text, Textarea } from "@chakra-ui/react";
 import { Select, createListCollection } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
-import { FiEdit } from "react-icons/fi";
-
 import {
   TASK_PRIORITY_OPTIONS,
   TASK_STATUS_OPTIONS,
@@ -27,6 +22,8 @@ import {
 
 interface EditTaskProps {
   task: TaskPublic;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 interface TaskUpdateForm {
@@ -37,10 +34,10 @@ interface TaskUpdateForm {
   priority?: "low" | "medium" | "high" | null;
 }
 
-const EditTask = ({ task }: EditTaskProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+const EditTask = ({ task, isOpen, onOpenChange }: EditTaskProps) => {
   const queryClient = useQueryClient();
   const { showSuccessToast, showErrorToast } = useCustomToast();
+
   const {
     register,
     handleSubmit,
@@ -66,7 +63,7 @@ const EditTask = ({ task }: EditTaskProps) => {
     onSuccess: () => {
       showSuccessToast("Tarea actualizada exitosamente.");
       reset();
-      setIsOpen(false);
+      onOpenChange(false); // Close the dialog on success
     },
     onError: (err: any) => {
       showErrorToast(err.body.detail);
@@ -76,7 +73,7 @@ const EditTask = ({ task }: EditTaskProps) => {
     },
   });
 
-  const onSubmit: SubmitHandler<TaskUpdateForm> = async (data) => {
+  const onSubmit: SubmitHandler<TaskUpdateForm> = (data) => {
     mutation.mutate(data);
   };
 
@@ -85,18 +82,8 @@ const EditTask = ({ task }: EditTaskProps) => {
       size={{ base: "xs", md: "md" }}
       placement="center"
       open={isOpen}
-      onOpenChange={({ open }) => setIsOpen(open)}
+      onOpenChange={({ open }) => onOpenChange(open)}
     >
-      <MenuItem
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsOpen(true);
-        }}
-        value="edit-task"
-      >
-        <FiEdit fontSize="16px" />
-        Editar Tarea
-      </MenuItem>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
@@ -203,7 +190,6 @@ const EditTask = ({ task }: EditTaskProps) => {
               </Field>
             </Flex>
           </DialogBody>
-
           <DialogFooter gap={2}>
             <DialogActionTrigger asChild>
               <Button
@@ -223,7 +209,7 @@ const EditTask = ({ task }: EditTaskProps) => {
               Guardar
             </Button>
           </DialogFooter>
-          <DialogCloseTrigger onClick={() => setIsOpen(false)} />
+          <DialogCloseTrigger />
         </form>
       </DialogContent>
     </DialogRoot>
