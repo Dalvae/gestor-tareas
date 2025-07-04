@@ -20,17 +20,7 @@ import { useState } from "react"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import { FiEdit } from "react-icons/fi"
 
-const TASK_STATUS_OPTIONS = [
-  { value: "pending", label: "Pendiente" },
-  { value: "in-progress", label: "En Progreso" },
-  { value: "completed", label: "Completada" },
-]
-
-const TASK_PRIORITY_OPTIONS = [
-  { value: "low", label: "Baja" },
-  { value: "medium", label: "Media" },
-  { value: "high", label: "Alta" },
-]
+import { TASK_STATUS_OPTIONS, TASK_PRIORITY_OPTIONS } from "@/utils/taskOptions";
 
 interface EditTaskProps {
   task: TaskPublic
